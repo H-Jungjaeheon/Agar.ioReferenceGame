@@ -4,26 +4,30 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    Vector3 targetPos;
+    public Vector2 targetPos;
+
+    private void Start()
+    {
+        targetPos = transform.position;
+    }
 
     private void Update()
     {
-        Get_MouseInput();
-        Update_Moving();
+        MouseInput();
+        Moving();
     }
 
-    private void Get_MouseInput()
+    private void MouseInput()
     {
         if (Input.GetMouseButtonUp(0))
         {
-            Vector2 mousePos = Input.mousePosition;
-            targetPos = mousePos;
+            print(Input.mousePosition);
+            targetPos = new Vector2(10f, 10f);
         }
     }
 
-    private void Update_Moving()
+    private void Moving()
     {
-        transform.position = Vector3.Lerp(transform.position, targetPos, 0.1f);
+        transform.position = Vector3.MoveTowards(transform.position, targetPos, Time.deltaTime);
     }
-
 }
