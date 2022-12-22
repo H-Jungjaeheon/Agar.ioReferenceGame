@@ -6,26 +6,24 @@ public class Player : MonoBehaviour
 {
     Vector3 targetPos;
 
-    Vector3 mousePos;
-
-    void Update()
+    private void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        Get_MouseInput();
+        Update_Moving();
+    }
+
+    private void Get_MouseInput()
+    {
+        if (Input.GetMouseButtonUp(0))
         {
-            mousePos = Input.mousePosition;
-            targetPos = Camera.main.ScreenToWorldPoint(mousePos);
+            Vector2 mousePos = Input.mousePosition;
+            targetPos = mousePos;
         }
-        MoveToTargetPos();
     }
 
-    private void MoveToTargetPos()
+    private void Update_Moving()
     {
-        transform.position = Vector3.MoveTowards(transform.position, targetPos, 10f);
+        transform.position = Vector3.Lerp(transform.position, targetPos, 0.1f);
     }
 
-    private IEnumerator MoveToTarget()
-    {
-
-        yield return null;
-    }
 }
