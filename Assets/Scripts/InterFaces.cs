@@ -1,4 +1,4 @@
-public interface IHit
+public interface IInteraction
 {
-    public void Hit();
+    public void Interaction();
 }

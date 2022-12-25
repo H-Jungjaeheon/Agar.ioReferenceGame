@@ -4,6 +4,14 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    public static Player instance = null;
+
+    [Tooltip("이동속도")]
+    public float speed;
+
+    [Tooltip("현재 크기")]
+    private float size;
+
     public float Size
     {
         get { return size; }
@@ -18,15 +26,6 @@ public class Player : MonoBehaviour
             transform.localScale = sizeVector;
         }
     }
-    public static Player instance = null;
-
-    [SerializeField]
-    [Tooltip("이동속도")]
-    private float speed;
-
-    [Tooltip("현재 크기")]
-    private float size;
-
 
     private Vector3 sizeVector = new Vector3(0f, 0f, 1); //크기 조정용 벡터
 
@@ -67,8 +66,8 @@ public class Player : MonoBehaviour
         transform.position = Vector3.MoveTowards(transform.position, targetPos, Time.deltaTime * speed);
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        collision.gameObject.GetComponent<IHit>().Hit();
-    }
+    //private void OnTriggerEnter2D(Collider2D collision)
+    //{
+    //    collision.gameObject.GetComponent<IInteraction>().Interaction();
+    //}
 }
