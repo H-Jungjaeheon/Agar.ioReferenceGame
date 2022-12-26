@@ -155,7 +155,7 @@ MonoBehaviour:
   bottomLeft: {x: -10, y: -5}
   topRight: {x: 10, y: 5}
   startPos: {x: 0, y: 0}
-  targetPos: {x: -10, y: 5}
+  targetPos: {x: 10, y: -5}
   FinalNodeList: []
   allowDiagonal: 1
   dontCrossCorner: 1

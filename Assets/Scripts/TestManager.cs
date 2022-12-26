@@ -8,10 +8,11 @@ public class Node
 {
     public Node(bool _isWall, int _x, int _y) { isWall = _isWall; x = _x; y = _y; } //노드 생성자 (벽 판별, x위치값, y위치값 매개변수로 초기화)
 
-    public bool isWall;
-    public Node ParentNode;
+    public bool isWall; //현재 노드가 벽인지 판별
 
-    // G : 시작으로부터 이동했던 거리, H : 가로 + 세로 장애물 무시하여 목표까지의 거리, F : G + H
+    public Node ParentNode; //부모 노드 저장(전 노드)
+
+    //x, y : 노드 좌표, G : 시작으로부터 이동했던 거리, H : 가로 + 세로 장애물 무시하여 목표까지의 거리, F : G + H
     public int x, y, G, H;
     public int F { get { return G + H; } }
 }
@@ -42,9 +43,11 @@ public class TestManager : MonoBehaviour
     int sizeX, sizeY;
 
     Node[,] NodeArray;
+
     Node StartNode, TargetNode, CurNode;
 
     List<Node> OpenList;
+
     List<Node> ClosedList;
 
 
@@ -57,19 +60,19 @@ public class TestManager : MonoBehaviour
     {
         startPos = Vector2Int.RoundToInt(new Vector2(0, 0)); //만약 시작 지점 좌표가 소숫점이 포함된다면 int로 변형해서 가져오기
 
-        // NodeArray의 크기 정해주기
-        sizeX = topRight.x - bottomLeft.x + 1;
+        // NodeArray의 크기 정해주기(현재 길찾기 전체 범위)
+        sizeX = topRight.x - bottomLeft.x + 1; //1 더하는 이유는 0 포함
         sizeY = topRight.y - bottomLeft.y + 1;
 
-        NodeArray = new Node[sizeX, sizeY];
+        NodeArray = new Node[sizeX, sizeY]; //현재 탐색 범위 설정
 
-        for (int i = 0; i < sizeX; i++)
+        for (int i = 0; i < sizeX; i++) //전체 범위를 탐색해서 벽 찾기
         {
             for (int j = 0; j < sizeY; j++)
             {
                 bool isWall = false;
 
-                foreach (Collider2D col in Physics2D.OverlapCircleAll(new Vector2(i + bottomLeft.x, j + bottomLeft.y), 0.4f))
+                foreach (Collider2D col in Physics2D.OverlapCircleAll(new Vector2(i + bottomLeft.x, j + bottomLeft.y), 0.4f)) //좌표를 돌아가며 벽 판별용 원을 그린다(한 칸으로 잡은 범위만큼 원 생성)
                 {
                     if (col.gameObject.CompareTag("Wall"))
                     {
@@ -84,6 +87,7 @@ public class TestManager : MonoBehaviour
 
         // 시작과 끝 노드, 열린리스트와 닫힌리스트, 마지막리스트 초기화
         StartNode = NodeArray[startPos.x - bottomLeft.x, startPos.y - bottomLeft.y];
+
         TargetNode = NodeArray[targetPos.x - bottomLeft.x, targetPos.y - bottomLeft.y];
 
         OpenList = new List<Node>() { StartNode };
