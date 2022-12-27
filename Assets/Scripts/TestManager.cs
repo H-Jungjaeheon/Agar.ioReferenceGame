@@ -86,7 +86,7 @@ public class TestManager : MonoBehaviour
 
             for (int i = 1; i < OpenList.Count; i++)
             {
-                if (OpenList[i].F <= CurNode.F && OpenList[i].H < CurNode.H)
+                if (OpenList[i].F <= CurNode.F && OpenList[i].tDistance < CurNode.tDistance)
                 {
                     CurNode = OpenList[i];
                 } 
@@ -112,7 +112,7 @@ public class TestManager : MonoBehaviour
 
                 for (int i = 0; i < FinalNodeList.Count; i++)
                 {
-                    print(i + "번째는 " + FinalNodeList[i].x + ", " + FinalNodeList[i].y);
+                    print(i + "번째는 " + FinalNodeList[i].xPos + ", " + FinalNodeList[i].yPos);
                 }
                 return;
             }
@@ -121,17 +121,17 @@ public class TestManager : MonoBehaviour
             // ↗↖↙↘
             if (allowDiagonal)
             {
-                OpenListAdd(CurNode.x + 1, CurNode.y + 1);
-                OpenListAdd(CurNode.x - 1, CurNode.y + 1);
-                OpenListAdd(CurNode.x - 1, CurNode.y - 1);
-                OpenListAdd(CurNode.x + 1, CurNode.y - 1);
+                OpenListAdd(CurNode.xPos + 1, CurNode.yPos + 1);
+                OpenListAdd(CurNode.xPos - 1, CurNode.yPos + 1);
+                OpenListAdd(CurNode.xPos - 1, CurNode.yPos - 1);
+                OpenListAdd(CurNode.xPos + 1, CurNode.yPos - 1);
             }
 
             // ↑ → ↓ ←
-            OpenListAdd(CurNode.x, CurNode.y + 1);
-            OpenListAdd(CurNode.x + 1, CurNode.y);
-            OpenListAdd(CurNode.x, CurNode.y - 1);
-            OpenListAdd(CurNode.x - 1, CurNode.y);
+            OpenListAdd(CurNode.xPos, CurNode.yPos + 1);
+            OpenListAdd(CurNode.xPos + 1, CurNode.yPos);
+            OpenListAdd(CurNode.xPos, CurNode.yPos - 1);
+            OpenListAdd(CurNode.xPos - 1, CurNode.yPos);
         }
     }
 
@@ -143,7 +143,7 @@ public class TestManager : MonoBehaviour
             // 대각선 허용시, 벽 사이로 통과 안됨
             if (allowDiagonal)
             {
-                if (NodeArray[CurNode.x - bottomLeft.x, checkY - bottomLeft.y].isWall && NodeArray[checkX - bottomLeft.x, CurNode.y - bottomLeft.y].isWall)
+                if (NodeArray[CurNode.xPos - bottomLeft.x, checkY - bottomLeft.y].isWall && NodeArray[checkX - bottomLeft.x, CurNode.yPos - bottomLeft.y].isWall)
                 {
                     return;
                 }  
@@ -152,7 +152,7 @@ public class TestManager : MonoBehaviour
             // 코너를 가로질러 가지 않을시, 이동 중에 수직수평 장애물이 있으면 안됨
             if (dontCrossCorner)
             {
-                if (NodeArray[CurNode.x - bottomLeft.x, checkY - bottomLeft.y].isWall || NodeArray[checkX - bottomLeft.x, CurNode.y - bottomLeft.y].isWall)
+                if (NodeArray[CurNode.xPos - bottomLeft.x, checkY - bottomLeft.y].isWall || NodeArray[checkX - bottomLeft.x, CurNode.yPos - bottomLeft.y].isWall)
                 {
                     return;
                 }
@@ -160,14 +160,14 @@ public class TestManager : MonoBehaviour
 
             // 이웃노드에 넣고, 직선은 10, 대각선은 14비용
             Node NeighborNode = NodeArray[checkX - bottomLeft.x, checkY - bottomLeft.y];
-            int MoveCost = CurNode.G + (CurNode.x - checkX == 0 || CurNode.y - checkY == 0 ? 10 : 14);
+            int MoveCost = CurNode.sDistance + (CurNode.xPos - checkX == 0 || CurNode.yPos - checkY == 0 ? 10 : 14);
 
 
             // 이동비용이 이웃노드G보다 작거나 또는 열린리스트에 이웃노드가 없다면 G, H, ParentNode를 설정 후 열린리스트에 추가
-            if (MoveCost < NeighborNode.G || !OpenList.Contains(NeighborNode))
+            if (MoveCost < NeighborNode.sDistance || !OpenList.Contains(NeighborNode))
             {
-                NeighborNode.G = MoveCost;
-                NeighborNode.H = (Mathf.Abs(NeighborNode.x - TargetNode.x) + Mathf.Abs(NeighborNode.y - TargetNode.y)) * 10;
+                NeighborNode.sDistance = MoveCost;
+                NeighborNode.tDistance = (Mathf.Abs(NeighborNode.xPos - TargetNode.xPos) + Mathf.Abs(NeighborNode.yPos - TargetNode.yPos)) * 10;
                 NeighborNode.ParentNode = CurNode;
 
                 OpenList.Add(NeighborNode);
@@ -181,7 +181,7 @@ public class TestManager : MonoBehaviour
         {
             for (int i = 0; i < FinalNodeList.Count - 1; i++)
             {
-                Gizmos.DrawLine(new Vector2(FinalNodeList[i].x, FinalNodeList[i].y), new Vector2(FinalNodeList[i + 1].x, FinalNodeList[i + 1].y));
+                Gizmos.DrawLine(new Vector2(FinalNodeList[i].xPos, FinalNodeList[i].yPos), new Vector2(FinalNodeList[i + 1].xPos, FinalNodeList[i + 1].yPos));
             }
         } 
     }
