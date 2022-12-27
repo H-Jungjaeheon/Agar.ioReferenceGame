@@ -1838,13 +1838,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 10
-  bottomLeft: {x: 0, y: 0}
-  topRight: {x: 0, y: 0}
+  bottomLeft: {x: -10, y: -5}
+  topRight: {x: 10, y: 5}
   startPos: {x: 0, y: 0}
-  targetpos: {x: 0, y: 0}
+  targetpos: {x: 0, y: 0, z: 0}
   FinalNodeList: []
-  allowDiagonal: 0
-  dontCrossCorner: 0
+  allowDiagonal: 1
+  dontCrossCorner: 1
 --- !u!58 &1908664611
 CircleCollider2D:
   m_ObjectHideFlags: 0

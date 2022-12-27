@@ -86,6 +86,7 @@ public class Player : MonoBehaviour
         MouseInput();
         Moving();
     }
+
     private void Init()
     {
         if (instance == null)
@@ -116,7 +117,15 @@ public class Player : MonoBehaviour
 
     public void PathFinding() //길찾기 시작 함수
     {
-        startPos = Vector2Int.RoundToInt(new Vector2(0, 0)); //만약 시작 지점 좌표가 소숫점이 포함된다면 int로 변형해서 가져오기
+        #region 현재 위치 기준으로 최대 이동 범위 재설정(카메라 범위 기준, 카메라 비치는 크기에 비례해서 변경하도록 수정하기)
+        bottomLeft.x = (int)(transform.position.x - 10);
+        bottomLeft.y = (int)(transform.position.y - 5);
+
+        topRight.x = (int)(transform.position.x + 10);
+        topRight.y = (int)(transform.position.y + 5);
+        #endregion
+
+        startPos = Vector2Int.RoundToInt(transform.position); //만약 시작 지점 좌표가 소숫점이 포함된다면 int로 변형해서 가져오기(길찾기 시작 위치 현재 플레이어 위치로 초기화)
 
         // NodeArray의 크기 정해주기(현재 길찾기 전체 범위)
         sizeX = topRight.x - bottomLeft.x + 1; //1 더하는 이유는 0 포함
@@ -146,7 +155,7 @@ public class Player : MonoBehaviour
         // 시작과 끝 노드, 열린리스트와 닫힌리스트, 마지막리스트 초기화
         StartNode = NodeArray[startPos.x - bottomLeft.x, startPos.y - bottomLeft.y];
 
-        TargetNode = NodeArray[targetpos.x - bottomLeft.x, targetpos.y - bottomLeft.y];
+        TargetNode = NodeArray[(int)targetpos.x - bottomLeft.x, (int)targetpos.y - bottomLeft.y];
 
         OpenList = new List<Node>() { StartNode };
         ClosedList = new List<Node>();
