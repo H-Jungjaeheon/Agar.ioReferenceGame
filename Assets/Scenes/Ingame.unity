@@ -139,7 +139,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &175081758
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1838,6 +1838,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 10
+  bottomLeft: {x: 0, y: 0}
+  topRight: {x: 0, y: 0}
+  startPos: {x: 0, y: 0}
+  targetpos: {x: 0, y: 0}
+  FinalNodeList: []
+  allowDiagonal: 0
+  dontCrossCorner: 0
 --- !u!58 &1908664611
 CircleCollider2D:
   m_ObjectHideFlags: 0

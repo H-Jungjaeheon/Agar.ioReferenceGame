@@ -2,22 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
-[System.Serializable]
-public class Node
-{
-    public Node(bool _isWall, int _x, int _y) { isWall = _isWall; x = _x; y = _y; } //노드 생성자 (벽 판별, x위치값, y위치값 매개변수로 초기화)
-
-    public bool isWall; //현재 노드가 벽인지 판별
-
-    public Node ParentNode; //부모 노드 저장(전 노드)
-
-    //x, y : 노드 좌표, G : 시작으로부터 이동했던 거리, H : 가로 + 세로 장애물 무시하여 목표까지의 거리, F : G + H
-    public int x, y, G, H;
-    public int F { get { return G + H; } }
-}
-
-
 public class TestManager : MonoBehaviour
 {
     [Tooltip("측정 가능한 최대 좌표값(음수 x, y)")]
