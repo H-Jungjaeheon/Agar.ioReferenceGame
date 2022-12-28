@@ -93,6 +93,8 @@ public class Player : MonoBehaviour
 
     List<Node> ClosedList;
 
+    Camera mainCam;
+
     private void Start()
     {
         Init();
@@ -110,6 +112,8 @@ public class Player : MonoBehaviour
         {
             instance = this;
         }
+
+        mainCam = Camera.main;
 
         size = 0.7f;
         sizeVector.x = size;
@@ -135,11 +139,11 @@ public class Player : MonoBehaviour
     public void PathFinding() //길찾기 시작 함수
     {
         #region 현재 위치 기준으로 최대 이동 범위 재설정(카메라 범위 기준, 카메라 비치는 크기에 비례해서 변경하도록 수정하기)
-        bottomLeft.x = (int)(transform.position.x - 10);
-        bottomLeft.y = (int)(transform.position.y - 5);
+        bottomLeft.x = (int)(transform.position.x - (9 + mainCam.orthographicSize));
+        bottomLeft.y = (int)(transform.position.y - (5 + mainCam.orthographicSize));
 
-        topRight.x = (int)(transform.position.x + 10);
-        topRight.y = (int)(transform.position.y + 5);
+        topRight.x = (int)(transform.position.x + (9 + mainCam.orthographicSize));
+        topRight.y = (int)(transform.position.y + (5 + mainCam.orthographicSize));
         #endregion
 
         startPos = Vector2Int.RoundToInt(transform.position); //만약 시작 지점 좌표가 소숫점이 포함된다면 int로 변형해서 가져오기(길찾기 시작 위치 현재 플레이어 위치로 초기화)
