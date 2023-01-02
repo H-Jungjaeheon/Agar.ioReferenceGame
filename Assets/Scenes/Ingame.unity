@@ -1841,10 +1841,8 @@ MonoBehaviour:
   bottomLeft: {x: -9, y: -5}
   topRight: {x: 9, y: 5}
   startPos: {x: 0, y: 0}
-  targetpos: {x: 0, y: 0, z: 0}
+  targetPos: {x: 0, y: 0, z: 0}
   FinalNodeList: []
-  allowDiagonal: 1
-  dontCrossCorner: 1
 --- !u!58 &1908664611
 CircleCollider2D:
   m_ObjectHideFlags: 0
