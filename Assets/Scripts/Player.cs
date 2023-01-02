@@ -31,7 +31,7 @@ public class Node
     [Tooltip("장애물 무시하여 목표까지의 거리(가로 + 세로)")]
     public int tDistance;
     
-    public int F { get { return sDistance + tDistance; } } //F : sDistance + tDistance
+    public int priorityScore { get { return sDistance + tDistance; } } //priorityScore : sDistance + tDistance
 }
 
 public class Player : MonoBehaviour
@@ -59,9 +59,9 @@ public class Player : MonoBehaviour
         }
     }
 
-    private Vector3 sizeVector = new Vector3(0f, 0f, 1); //크기 조정용 벡터
+    private Vector3 sizeVector = new Vector3(0f, 0f, 1f); //크기 조정용 벡터
 
-    private Vector2 targetPos; //현재 마우스로 찍은 목표 포지션
+    //private Vector2 targetPos; //현재 마우스로 찍은 목표 포지션
 
     [Tooltip("측정 가능한 최대 좌표값(음수 x, y)")]
     public Vector2Int bottomLeft;
@@ -73,8 +73,9 @@ public class Player : MonoBehaviour
     public Vector2Int startPos;
 
     [Tooltip("목표 포지션")]
-    public Vector3 targetpos;
+    public Vector3 targetPos;
 
+    [Tooltip("최종 길 노드 리스트")]
     public List<Node> FinalNodeList;
 
     [Tooltip("대각선 움직임 허용 여부")]
@@ -116,17 +117,14 @@ public class Player : MonoBehaviour
         mainCam = Camera.main;
 
         size = 0.7f;
-        sizeVector.x = size;
-        sizeVector.y = size;
-        targetPos = transform.position;
     }
 
     private void MouseInput()
     {
         if (Input.GetMouseButtonDown(0))
         {
-            targetPos = Camera.main.ScreenToWorldPoint(new Vector2(Input.mousePosition.x, Input.mousePosition.y));
-            targetpos = Camera.main.ScreenToWorldPoint(new Vector3Int((int)Input.mousePosition.x, (int)Input.mousePosition.y, 0));
+            //targetPos = Camera.main.ScreenToWorldPoint(new Vector2(Input.mousePosition.x, Input.mousePosition.y));
+            targetPos = Camera.main.ScreenToWorldPoint(new Vector3Int((int)Input.mousePosition.x, (int)Input.mousePosition.y, 0));
             PathFinding();
         }
     }
@@ -176,7 +174,7 @@ public class Player : MonoBehaviour
         // 시작과 끝 노드, 열린리스트와 닫힌리스트, 마지막리스트 초기화
         StartNode = NodeArray[startPos.x - bottomLeft.x, startPos.y - bottomLeft.y];
 
-        TargetNode = NodeArray[(int)targetpos.x - bottomLeft.x, (int)targetpos.y - bottomLeft.y];
+        TargetNode = NodeArray[(int)targetPos.x - bottomLeft.x, (int)targetPos.y - bottomLeft.y];
 
         OpenList = new List<Node>() { StartNode };
         ClosedList = new List<Node>();
@@ -190,7 +188,7 @@ public class Player : MonoBehaviour
 
             for (int i = 1; i < OpenList.Count; i++)
             {
-                if (OpenList[i].F <= CurNode.F && OpenList[i].tDistance < CurNode.tDistance)
+                if (OpenList[i].priorityScore <= CurNode.priorityScore && OpenList[i].tDistance < CurNode.tDistance)
                 {
                     CurNode = OpenList[i];
                 }

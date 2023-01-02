@@ -86,7 +86,7 @@ public class TestManager : MonoBehaviour
 
             for (int i = 1; i < OpenList.Count; i++)
             {
-                if (OpenList[i].F <= CurNode.F && OpenList[i].tDistance < CurNode.tDistance)
+                if (OpenList[i].priorityScore <= CurNode.priorityScore && OpenList[i].tDistance < CurNode.tDistance)
                 {
                     CurNode = OpenList[i];
                 } 
