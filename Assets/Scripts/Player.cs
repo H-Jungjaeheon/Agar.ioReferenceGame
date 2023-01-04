@@ -98,7 +98,7 @@ public class Player : MonoBehaviour
 
     IEnumerator movingCoroutine;
 
-    Camera mainCam; //메인 카메라 컴포넌트
+    public Camera cam; //메인 카메라 컴포넌트
 
     private void Start()
     {
@@ -116,8 +116,6 @@ public class Player : MonoBehaviour
         {
             instance = this;
         }
-
-        mainCam = Camera.main;
 
         size = 0.65f;
     }
@@ -141,11 +139,11 @@ public class Player : MonoBehaviour
     public void PathFinding() //길찾기 시작 함수
     {
         #region 현재 위치 기준으로 최대 이동 범위 재설정(카메라 범위 기준, 카메라 비치는 크기에 비례해서 변경하도록 수정하기)
-        bottomLeft.x = (int)(transform.position.x - (9 + mainCam.orthographicSize));
-        bottomLeft.y = (int)(transform.position.y - (5 + mainCam.orthographicSize));
+        bottomLeft.x = (int)(transform.position.x - (9 + cam.orthographicSize));
+        bottomLeft.y = (int)(transform.position.y - (5 + cam.orthographicSize));
 
-        topRight.x = (int)(transform.position.x + (9 + mainCam.orthographicSize));
-        topRight.y = (int)(transform.position.y + (5 + mainCam.orthographicSize));
+        topRight.x = (int)(transform.position.x + (9 + cam.orthographicSize));
+        topRight.y = (int)(transform.position.y + (5 + cam.orthographicSize));
         #endregion
 
         // NodeArray의 크기 정해주기(현재 길찾기 전체 범위, 1 더하는 이유는 0좌표를 포함하기 위함)
@@ -160,7 +158,7 @@ public class Player : MonoBehaviour
             {
                 bool isWall = false;
 
-                foreach (Collider2D collider in Physics2D.OverlapCircleAll(new Vector2(i + bottomLeft.x, j + bottomLeft.y), 0.4f)) //좌표를 돌아가며 벽 판별용 원을 그린다(한 칸으로 잡은 범위만큼 원 생성)
+                foreach (Collider2D collider in Physics2D.OverlapCircleAll(new Vector2(i + bottomLeft.x, j + bottomLeft.y), (transform.localScale.x / 2))) //좌표를 돌아가며 벽 판별용 원을 그린다(한 칸으로 잡은 범위만큼 원 생성)
                 {
                     if (collider.gameObject.CompareTag("Wall"))
                     {
