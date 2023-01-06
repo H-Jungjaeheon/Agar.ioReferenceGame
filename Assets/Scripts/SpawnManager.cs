@@ -6,7 +6,9 @@ public class SpawnManager : MonoBehaviour
 
     GameObject nowFeedObj;
 
-    Vector2 spawnPos = new Vector2(0f, 0f);
+    Vector2 spawnPos = new Vector2(0, 0);
+
+    Collider2D collider;
 
     private const string wallTag = "Wall";
 
@@ -16,39 +18,25 @@ public class SpawnManager : MonoBehaviour
 
     void Start()
     {
-        bool isEmpty;
-
         poolInstance = ObjectPool.instance;
 
-        for (int nowSpawnIndex = 0; nowSpawnIndex < 100; nowSpawnIndex++)
+        for (int nowSpawnIndex = 0; nowSpawnIndex < 200; nowSpawnIndex++)
         {
-            isEmpty = false;
+            nowFeedObj = poolInstance.GetObject(ObjectKind.FeedObj);
 
-            //while (true)
-            //{
+            while (true)
+            {
                 spawnPos.x = Random.Range(-86, 86);
                 spawnPos.y = Random.Range(-86, 86);
 
-                //foreach (Collider2D collider in Physics2D.OverlapCircleAll(spawnPos, 0.25f))
-                //{
-                //    if (collider.gameObject.CompareTag(wallTag) || collider.gameObject.CompareTag(feedTag) || collider.gameObject.CompareTag(playerTag))
-                //    {
-                //        isEmpty = false;
-                //    }
-                //    else
-                //    {
-                //        isEmpty = true;
-                //    }
-                //}
+                collider = Physics2D.OverlapCircle(spawnPos, 0.25f);
 
-                //if (isEmpty)
-                //{
-                //    break;
-                //}
-            //}
-
-            nowFeedObj = poolInstance.GetObject(ObjectKind.FeedObj);
-            nowFeedObj.transform.localPosition = spawnPos;
+                if (collider == null)
+                {
+                    nowFeedObj.transform.localPosition = spawnPos;
+                    break;
+                }
+            }
         }
     }
 }

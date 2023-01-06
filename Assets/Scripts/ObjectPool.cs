@@ -46,7 +46,7 @@ public class ObjectPool : MonoBehaviour
             switch ((ObjectKind)nowIndex)
             {
                 case ObjectKind.FeedObj:
-                    spawnCount = 100;
+                    spawnCount = 200;
                     break;
                 case ObjectKind.EnemyObj:
                     spawnCount = 20;
