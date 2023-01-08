@@ -54,16 +54,27 @@ public class Player : MonoBehaviour
         get { return size; }
         set
         {
-            size = value;
+            if (value < 1.55f)
+            {
+                size = value;
 
-            sizeVector.x = size;
-            sizeVector.y = size;
+                sizeVector.x = size;
+                sizeVector.y = size;
+            }
+            else
+            {
+                sizeVector.x = 1.55f;
+                sizeVector.y = 1.55f;
+            }
 
             transform.localScale = sizeVector;
         }
     }
 
     Vector3 sizeVector = new Vector3(0f, 0f, 1f); //크기 조정용 벡터
+
+    #region 길찾기 알고리즘 변수 모음
+    [Header("길찾기 알고리즘 변수 모음")]
 
     [Tooltip("측정 가능한 최대 좌표값(음수 x, y)")]
     public Vector2Int bottomLeft;
@@ -95,14 +106,33 @@ public class Player : MonoBehaviour
     List<Node> OpenList; //현재 진행 가능 경로의 노드들
 
     List<Node> ClosedList; //진행 완료된 경로의 노드들
+    #endregion
 
     IEnumerator movingCoroutine;
 
-    public Camera cam; //메인 카메라 컴포넌트
+    [Tooltip("메인 카메라 컴포넌트")]
+    public Camera cam;
+
+    #region 플레이어 스폰 관련 변수 모음
+    [Header("플레이어 스폰 관련 변수 모음")]
+
+    [SerializeField]
+    [Tooltip("스폰 지점들 콜라이더 모음")]
+    private BoxCollider2D[] spawnColliders;
+
+    [Tooltip("현재 스폰 지점 인덱스(랜덤 뽑기)")]
+    private int nowSpawnIndex;
+    #endregion
 
     private void Start()
     {
         Init();
+        RandSpawn();
+    }
+
+    private void OnEnable()
+    {
+        RandSpawn();
     }
 
     private void Update()
@@ -117,7 +147,27 @@ public class Player : MonoBehaviour
             instance = this;
         }
 
-        size = 0.65f;
+        size = 0.15f;
+    }
+
+    private void RandSpawn()
+    {
+        Vector3 nowSpawnPos; //현재 뽑힌 랜덤 스폰 장소 오브젝트 위치
+        BoxCollider2D nowSpawnCollider; //현재 뽑힌 랜덤 스폰 장소 콜라이더
+
+        nowSpawnIndex = Random.Range(0, 4);
+
+        nowSpawnCollider = spawnColliders[nowSpawnIndex];
+        nowSpawnPos = nowSpawnCollider.transform.position;
+
+        //현재 뽑힌 랜덤 스폰 장소 콜라이더 범위(X, Y)
+        float range_X = nowSpawnCollider.bounds.size.x; 
+        float range_Y = nowSpawnCollider.bounds.size.y;
+
+        range_X = Random.Range((range_X / 2) * -1, range_X / 2);
+        range_Y = Random.Range((range_Y / 2) * -1, range_Y / 2);
+
+        transform.position = nowSpawnPos + new Vector3(range_X, range_Y, 0);
     }
 
     private void MouseInput()

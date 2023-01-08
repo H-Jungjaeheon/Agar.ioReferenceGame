@@ -25,9 +25,9 @@ public class ObjectPool : MonoBehaviour
 
     private void StartSetting()
     {
-        instance = this;
         if (instance == null)
         {
+            instance = this;
         }
 
         BasicSpawn();
