@@ -1,4 +1,4 @@
-public interface IInteraction
+public interface IDistinction
 {
-    public void Interaction();
+    public bool isDistinctionObj { get; }
 }

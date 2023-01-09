@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Wall
   - Feed
+  - Enemy
   layers:
   - Default
   - TransparentFX

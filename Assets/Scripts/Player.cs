@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.SceneManagement;
 
 [System.Serializable]
 public class Node
@@ -334,6 +334,11 @@ public class Player : MonoBehaviour
                 yield return null;
             }
         }
+    }
+
+    public void GameOver()
+    {
+        SceneManager.LoadScene(1);
     }
 
     void OnDrawGizmos()

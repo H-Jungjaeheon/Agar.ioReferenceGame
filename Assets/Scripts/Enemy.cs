@@ -89,15 +89,22 @@ public class Enemy : MonoBehaviour
 
     public void ChaseEvent(bool isEscapeRange)
     {
-        if (isEscapeRange && moving != null && targetReSetting != null)
-        {
-            StopCoroutine(moving);
-            StopCoroutine(targetReSetting);
-        }
-        else if(isEscapeRange == false)
+        if(isEscapeRange == false)
         {
             targetReSetting = TargetReSetting();
             StartCoroutine(targetReSetting);
+        }
+        else if (isEscapeRange)
+        {
+            if (moving != null)
+            {
+                StopCoroutine(moving);
+            }
+
+            if (targetReSetting != null)
+            {
+                StopCoroutine(targetReSetting);
+            }
         }
     }
 
@@ -115,14 +122,12 @@ public class Enemy : MonoBehaviour
     }
 
     public void PathFinding() //길찾기 시작 함수
-    {
-        #region 현재 위치 기준으로 최대 이동 범위 재설정(카메라 범위 기준, 카메라 비치는 크기에 비례해서 변경하도록 수정하기)
-        bottomLeft.x = (int)transform.position.x;
-        bottomLeft.y = (int)transform.position.y;
+    {  
+        bottomLeft.x = (int)transform.position.x - 20;
+        bottomLeft.y = (int)transform.position.y - 15;
 
-        topRight.x = (int)transform.position.x;
-        topRight.y = (int)transform.position.y;
-        #endregion
+        topRight.x = (int)transform.position.x + 20;
+        topRight.y = (int)transform.position.y + 15;
 
         // NodeArray의 크기 정해주기(현재 길찾기 전체 범위, 1 더하는 이유는 0좌표를 포함하기 위함)
         sizeX = topRight.x - bottomLeft.x + 1;
@@ -136,7 +141,7 @@ public class Enemy : MonoBehaviour
             {
                 bool isWall = false;
 
-                foreach (Collider2D collider in Physics2D.OverlapCircleAll(new Vector2(i + bottomLeft.x, j + bottomLeft.y), (transform.localScale.x / 3))) //좌표를 돌아가며 벽 판별용 원을 그린다(한 칸으로 잡은 범위만큼 원 생성)
+                foreach (Collider2D collider in Physics2D.OverlapCircleAll(new Vector2(i + bottomLeft.x, j + bottomLeft.y), transform.localScale.x / 2)) //좌표를 돌아가며 벽 판별용 원을 그린다(한 칸으로 잡은 범위만큼 원 생성)
                 {
                     if (collider.gameObject.CompareTag("Wall"))
                     {
@@ -150,7 +155,6 @@ public class Enemy : MonoBehaviour
 
         // 시작과 끝 노드, 열린리스트와 닫힌리스트, 마지막리스트 초기화
         StartNode = NodeArray[startPos.x - bottomLeft.x, startPos.y - bottomLeft.y];
-
         TargetNode = NodeArray[(int)targetPos.x - bottomLeft.x, (int)targetPos.y - bottomLeft.y];
 
         //길찾기 시작할 때 열린리스트에 시작지점 노드 넣기, 각 노드들 중복 방지 초기화 선언
@@ -264,8 +268,35 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    //private void OnTriggerEnter2D(Collider2D collision)
-    //{
-    //    collision.gameObject.GetComponent<IInteraction>().Interaction();
-    //}
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            Player playerComponent = player.GetComponent<Player>();
+
+            if (collision.gameObject.transform.localScale.x > gameObject.transform.localScale.x)
+            {
+                playerComponent.Size += 0.1f;
+
+                if (playerComponent.speed > 1)
+                {
+                    playerComponent.speed -= 0.5f;
+
+                    if (playerComponent.speed < 1)
+                    {
+                        playerComponent.speed = 1;
+                    }
+                }
+
+                playerComponent.cam.orthographicSize += 0.4f;
+
+                Destroy(gameObject); //오브젝트 풀로 변경
+            }
+            else
+            {
+                playerComponent.GameOver();
+            }
+        }
+
+    }
 }
